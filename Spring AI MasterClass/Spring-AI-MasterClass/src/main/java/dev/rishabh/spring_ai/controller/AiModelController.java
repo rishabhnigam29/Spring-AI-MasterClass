@@ -21,8 +21,9 @@ public class AiModelController {
     }
 
     @PostMapping(value = "/generate-image-with-ai", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<?> generateAiImage(@RequestParam String prompt) {
-        return ResponseEntity.ok(imageModelService.generateImage(prompt));
+    public ResponseEntity<?> generateAiImage(@RequestParam String prompt,
+                                             @RequestParam String model) {
+        return ResponseEntity.ok(imageModelService.generateImage(prompt,model));
     }
 
 
