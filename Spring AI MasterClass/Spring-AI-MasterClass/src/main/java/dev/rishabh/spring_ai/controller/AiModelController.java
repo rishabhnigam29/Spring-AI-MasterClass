@@ -4,9 +4,11 @@ import dev.rishabh.spring_ai.service.AudioSpeechModelService;
 import dev.rishabh.spring_ai.service.ChatModelService;
 import dev.rishabh.spring_ai.service.ImageModelService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -34,6 +36,13 @@ public class AiModelController {
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("audio/mpeg"))
                 .body(audioData);
+    }
+
+    @PostMapping("/generate-audio-transcription")
+    public ResponseEntity<String> transcribeAudio(@RequestParam("file") MultipartFile audioResource) {
+        Resource resource = audioResource.getResource();
+        String transcription = audioSpeechModelService.transcribe(resource);
+        return ResponseEntity.ok(transcription);
     }
 
 
