@@ -6,7 +6,7 @@ import org.springframework.ai.moderation.ModerationModel;
 import org.springframework.ai.moderation.ModerationPrompt;
 import org.springframework.ai.moderation.ModerationResponse;
 import org.springframework.ai.moderation.ModerationResult;
-import org.springframework.ai.openai.OpenAiModerationOptions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,15 +16,30 @@ import java.util.List;
 @Slf4j
 public class ModerationModelService {
 
-    private final ModerationModel moderationModel;
+    @Qualifier("openAiModerationModel")
+    private final ModerationModel openAiModerationModel;
 
-    public List<ModerationResult> moderateText(String text){
-        ModerationResponse moderationResponse = moderationModel.call(new ModerationPrompt(
-                text,
-                OpenAiModerationOptions.builder()
-                        .model("text-moderation-latest")
-                        .build()));
+    @Qualifier("mistralAiModerationModel")
+    private final ModerationModel mistralAiModerationModel;
 
-        return moderationResponse.getResult().getOutput().getResults();
+    public List<ModerationResult> moderateText(String model, String text) {
+        log.info("Moderating text with model: {} for text: {}", model, text);
+        if ("openai".equalsIgnoreCase(model)) {
+            return moderateText(openAiModerationModel, text);
+        } else if ("mistralai".equalsIgnoreCase(model)) {
+            return moderateText(mistralAiModerationModel, text);
+        } else {
+            throw new IllegalArgumentException("Unsupported model: " + model);
+        }
+    }
+
+
+    public List<ModerationResult> moderateText(ModerationModel moderationModel,
+                                               String text){
+        return moderationModel
+                .call(new ModerationPrompt(text))
+                .getResult()
+                .getOutput()
+                .getResults();
     }
 }

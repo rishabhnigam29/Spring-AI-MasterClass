@@ -48,7 +48,8 @@ public class AiModelController {
     }
 
     @PostMapping("/moderate-text")
-    public ResponseEntity<?> moderateText(@RequestParam String text) {
-        return ResponseEntity.ok(moderationModelService.moderateText(text));
+    public ResponseEntity<?> moderateText(@RequestParam String model,
+                                          @RequestParam String userText) {
+        return ResponseEntity.ok(moderationModelService.moderateText(model, userText));
     }
 }
