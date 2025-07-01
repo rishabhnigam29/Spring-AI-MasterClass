@@ -3,6 +3,7 @@ package dev.rishabh.spring_ai.controller;
 import dev.rishabh.spring_ai.service.AudioSpeechModelService;
 import dev.rishabh.spring_ai.service.ChatModelService;
 import dev.rishabh.spring_ai.service.ImageModelService;
+import dev.rishabh.spring_ai.service.ModerationModelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ public class AiModelController {
     private final ChatModelService chatModelService;
     private final ImageModelService imageModelService;
     private final AudioSpeechModelService audioSpeechModelService;
+    private final ModerationModelService moderationModelService;
 
     @GetMapping("/generate-text-with-ai")
     public String generateAiText(@RequestParam String prompt) {
@@ -45,14 +47,8 @@ public class AiModelController {
         return ResponseEntity.ok(transcription);
     }
 
-
-
-
-
-
-
-
-
-
-
+    @PostMapping("/moderate-text")
+    public ResponseEntity<?> moderateText(@RequestParam String text) {
+        return ResponseEntity.ok(moderationModelService.moderateText(text));
+    }
 }
