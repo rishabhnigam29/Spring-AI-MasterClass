@@ -52,4 +52,18 @@ public class AiModelController {
                                           @RequestParam String userText) {
         return ResponseEntity.ok(moderationModelService.moderateText(model, userText));
     }
+
+    @PostMapping("/generate-text-with-multimodal")
+    public ResponseEntity<?> generateTextWithMultimodalImage(@RequestParam String prompt,
+                                                             @RequestParam("file") MultipartFile file,
+                                                             @RequestParam String format) {
+        Resource imageResource = file.getResource();
+        if ("image".equalsIgnoreCase(format)){
+            return ResponseEntity.ok(chatModelService.generateTextWithMultimodalImageResource(prompt, imageResource));
+        } else if ("audio".equalsIgnoreCase(format)) {
+            return ResponseEntity.ok(chatModelService.generateTextWithMultimodalAudioResource(prompt, imageResource));
+        } else {
+            return ResponseEntity.badRequest().body("Unsupported format. Use 'image' or 'audio'.");
+        }
+    }
 }
