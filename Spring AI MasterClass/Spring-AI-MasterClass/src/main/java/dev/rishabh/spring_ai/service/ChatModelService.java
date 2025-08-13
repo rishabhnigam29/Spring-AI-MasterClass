@@ -26,23 +26,27 @@ public class ChatModelService {
         return chatModels.get(aiModels).stream(prompt);
     }
 
-    public String generateTextWithMultimodalImageResource(String prompt, Resource imageResource){
+    public String generateTextWithMultimodalImageResource(AiModels aiModels,
+                                                          String prompt,
+                                                          Resource imageResource){
 
-        return  generateTextWithMultimodalResource(prompt,
+        return  generateTextWithMultimodalResource(aiModels, prompt,
                 imageResource,
                 MimeTypeUtils.IMAGE_PNG,
-                OpenAiApi.ChatModel.GPT_4_O.value);
+                AiModels.OPENAI == aiModels ?
+                        OpenAiApi.ChatModel.GPT_4_O.value : "gemma3:4b");
     }
 
     public String generateTextWithMultimodalAudioResource(String prompt, Resource audioResource){
 
-        return  generateTextWithMultimodalResource(prompt,
+        return  generateTextWithMultimodalResource(AiModels.OPENAI, prompt,
                 audioResource,
                 MimeTypeUtils.parseMimeType("audio/mp3"),
                 OpenAiApi.ChatModel.GPT_4_O_AUDIO_PREVIEW.getName());
     }
 
-    private String generateTextWithMultimodalResource(String prompt,
+    private String generateTextWithMultimodalResource(AiModels aiModels,
+                                                      String prompt,
                                                      Resource resource,
                                                      MimeType mimeType,
                                                      String modelName) {
@@ -50,7 +54,7 @@ public class ChatModelService {
                 .media(new Media(mimeType, resource))
                 .build();
 
-        ChatResponse chatResponse = chatModels.get(AiModels.OPENAI).call(new Prompt(userMessage,
+        ChatResponse chatResponse = chatModels.get(aiModels).call(new Prompt(userMessage,
                 OpenAiChatOptions.builder()
                         .model(modelName)
                         .build()));

@@ -58,10 +58,11 @@ public class AiModelController {
     @PostMapping("/generate-text-with-multimodal")
     public ResponseEntity<?> generateTextWithMultimodalImage(@RequestParam String prompt,
                                                              @RequestParam("file") MultipartFile file,
-                                                             @RequestParam String format) {
+                                                             @RequestParam String format,
+                                                             @RequestParam(required = false) AiModels aiModels) {
         Resource imageResource = file.getResource();
         if ("image".equalsIgnoreCase(format)){
-            return ResponseEntity.ok(chatModelService.generateTextWithMultimodalImageResource(prompt, imageResource));
+            return ResponseEntity.ok(chatModelService.generateTextWithMultimodalImageResource(aiModels, prompt, imageResource));
         } else if ("audio".equalsIgnoreCase(format)) {
             return ResponseEntity.ok(chatModelService.generateTextWithMultimodalAudioResource(prompt, imageResource));
         } else {
