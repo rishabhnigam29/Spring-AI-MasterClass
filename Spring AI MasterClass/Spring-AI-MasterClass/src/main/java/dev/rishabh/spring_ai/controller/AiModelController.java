@@ -1,5 +1,6 @@
 package dev.rishabh.spring_ai.controller;
 
+import dev.rishabh.spring_ai.constants.AiModels;
 import dev.rishabh.spring_ai.service.AudioSpeechModelService;
 import dev.rishabh.spring_ai.service.ChatModelService;
 import dev.rishabh.spring_ai.service.ImageModelService;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api")
@@ -22,8 +24,8 @@ public class AiModelController {
     private final ModerationModelService moderationModelService;
 
     @GetMapping("/generate-text-with-ai")
-    public String generateAiText(@RequestParam String prompt) {
-        return chatModelService.generateText(prompt);
+    public Flux<String> generateAiText(@RequestParam AiModels aiModels, @RequestParam String prompt) {
+        return chatModelService.generateText(aiModels, prompt);
     }
 
     @PostMapping(value = "/generate-image-with-ai", produces = MediaType.IMAGE_PNG_VALUE)

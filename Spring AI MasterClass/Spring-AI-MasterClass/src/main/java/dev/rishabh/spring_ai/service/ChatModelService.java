@@ -1,5 +1,6 @@
 package dev.rishabh.spring_ai.service;
 
+import dev.rishabh.spring_ai.constants.AiModels;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
@@ -12,14 +13,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
+import reactor.core.publisher.Flux;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ChatModelService {
-    private final ChatModel chatModel;
+    private final Map<AiModels, ChatModel> chatModels;
 
-    public String generateText(String prompt){
-        return chatModel.call(prompt);
+    public Flux<String> generateText(AiModels aiModels, String prompt){
+        return chatModels.get(aiModels).stream(prompt);
     }
 
     public String generateTextWithMultimodalImageResource(String prompt, Resource imageResource){
@@ -46,7 +50,7 @@ public class ChatModelService {
                 .media(new Media(mimeType, resource))
                 .build();
 
-        ChatResponse chatResponse = chatModel.call(new Prompt(userMessage,
+        ChatResponse chatResponse = chatModels.get(AiModels.OPENAI).call(new Prompt(userMessage,
                 OpenAiChatOptions.builder()
                         .model(modelName)
                         .build()));
