@@ -45,7 +45,7 @@ public class AiModelController {
     @PostMapping("/generate-audio-transcription")
     public ResponseEntity<String> transcribeAudio(@RequestParam("file") MultipartFile audioResource) {
         Resource resource = audioResource.getResource();
-        String transcription = audioSpeechModelService.transcribe(resource);
+        String transcription = audioSpeechModelService.transcribe(audioResource);
         return ResponseEntity.ok(transcription);
     }
 

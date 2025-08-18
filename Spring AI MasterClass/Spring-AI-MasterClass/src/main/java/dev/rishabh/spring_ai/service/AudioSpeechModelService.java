@@ -1,5 +1,6 @@
 package dev.rishabh.spring_ai.service;
 
+import dev.rishabh.spring_ai.model.CustomAudioTranscribeModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.audio.transcription.AudioTranscriptionPrompt;
 import org.springframework.ai.audio.transcription.AudioTranscriptionResponse;
@@ -12,6 +13,7 @@ import org.springframework.ai.openai.audio.speech.SpeechPrompt;
 import org.springframework.ai.openai.audio.speech.SpeechResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +21,11 @@ public class AudioSpeechModelService {
 
     private final OpenAiAudioSpeechModel openAiAudioSpeechModel;
     private final OpenAiAudioTranscriptionModel openAiAudioTranscriptionModel;
+    private final CustomAudioTranscribeModel customAudioTranscribeModel;
+
+    public String transcribe(MultipartFile multipartFile){
+        return customAudioTranscribeModel.transcribeAudio(multipartFile);
+    }
 
     public String transcribe(Resource audioResource) {
         AudioTranscriptionPrompt transcriptionPrompt = new AudioTranscriptionPrompt(audioResource,
