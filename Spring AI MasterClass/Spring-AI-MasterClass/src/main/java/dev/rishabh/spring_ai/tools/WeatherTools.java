@@ -18,7 +18,7 @@ public class WeatherTools {
     @Tool(description = "Get weather for a specific latitude and longitude for a given date range")
     public String getWeatherForRangeOfDates(
             @ToolParam(description = "latitude of the location") String latitude,
-            @ToolParam(description = "latitude of the location") String longitude,
+            @ToolParam(description = "longitude of the location") String longitude,
             @ToolParam(description = "start date on which you want weather. The date is in format YYYY-MM-dd example 2025-08-10") String startDate,
             @ToolParam(description = "end date on which you want weather. The date is in format YYYY-MM-dd example 2025-08-10") String endDate) {
         String url = weatherApiUrl.replace("{lat}", latitude)

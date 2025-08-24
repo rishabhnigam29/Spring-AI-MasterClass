@@ -18,7 +18,8 @@ public class AiToolCallingController {
     @GetMapping("/generate-ai-response-with-tools")
     public String generateAiResponseWithTools(@RequestParam String prompt) {
         log.info("Received prompt: {}", prompt);
-        String response = toolCallingService.generateAiResponseWithTools(prompt);
+        String response = toolCallingService
+                .generateAiResponseWithCustomToolExecution(prompt);
         log.info("Generated AI response: {}", response);
         return response;
     }
