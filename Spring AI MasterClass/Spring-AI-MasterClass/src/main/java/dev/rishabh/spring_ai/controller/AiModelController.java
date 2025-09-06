@@ -1,10 +1,7 @@
 package dev.rishabh.spring_ai.controller;
 
 import dev.rishabh.spring_ai.constants.AiModels;
-import dev.rishabh.spring_ai.service.AudioSpeechModelService;
-import dev.rishabh.spring_ai.service.ChatModelService;
-import dev.rishabh.spring_ai.service.ImageModelService;
-import dev.rishabh.spring_ai.service.ModerationModelService;
+import dev.rishabh.spring_ai.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -22,6 +19,7 @@ public class AiModelController {
     private final ImageModelService imageModelService;
     private final AudioSpeechModelService audioSpeechModelService;
     private final ModerationModelService moderationModelService;
+    private final EmbeddingModelService embeddingModelService;
 
     @GetMapping("/generate-text-with-ai")
     public Flux<String> generateAiText(@RequestParam AiModels aiModels, @RequestParam String prompt) {
@@ -68,5 +66,11 @@ public class AiModelController {
         } else {
             return ResponseEntity.badRequest().body("Unsupported format. Use 'image' or 'audio'.");
         }
+    }
+
+    @PostMapping("/embed-text")
+    public ResponseEntity<float[]> embedText(@RequestParam String text) {
+        float[] embedding = embeddingModelService.getEmbeddings(text);
+        return ResponseEntity.ok(embedding);
     }
 }
